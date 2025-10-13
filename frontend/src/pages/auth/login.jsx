@@ -19,38 +19,80 @@ export default function Login() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md"
-      >
-        <h2 className="text-2xl font-bold mb-6 text-center text-blue-600">
-          Login
-        </h2>
+    <div className="flex justify-center items-center mt-[150px] overflow-hidden">
+      <div className="w-full max-w-lg">
+        {/* Logo and Welcome Section */}
+        <div className="text-center mb-8">
+          <img
+            src="/clinicLogo.png"
+            alt="ClinicCare Logo"
+            className="mx-auto mb-4 h-[100px] w-auto"
+          />
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+            Welcome Back
+          </h1>
+          <p className="text-gray-600 text-2xl">
+            Sign in to your{" "}
+            <span className="text-[#145CFB] font-semibold">ClinicCare</span>
+          </p>
+        </div>
 
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full mb-4 px-4 py-2 border rounded"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+        {/* Login Form Container */}
+        <div className="bg-blue-100 shadow-xl h-auto border border-[#9EC9FE] rounded-2xl p-10">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Email Field */}
+            <div className="space-y-2">
+              <label className="block text-xl font-medium text-gray-700 mb-1 text-left">
+                Email Address
+              </label>
+              <input
+                type="email"
+                placeholder="Enter The Email Address"
+                className="w-full px-4 py-3 border text-lg text-gray-400 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#478DBC] focus:border-transparent transition-all duration-200"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
 
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full mb-6 px-4 py-2 border rounded"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+            {/* Password Field */}
+            <div className="space-y-2">
+              <label className="block text-xl font-medium text-gray-700 mb-1 text-left">
+                Password
+              </label>
+              <input
+                type="password"
+                placeholder="Enter The Password"
+                className="w-full px-4 text-lg py-3 border text-gray-400 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#478DBC] focus:border-transparent transition-all duration-200"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-        >
-          Login
-        </button>
-      </form>
+            {/* Sign In Button */}
+            <button
+              type="submit"
+              className="w-full bg-[#478DBC] text-white text-xl  py-3 px-4 rounded-lg font-semibold hover:bg-[#3a7ca5] transition-colors duration-200"
+            >
+              Sign In
+            </button>
+          </form>
+
+          {/* Create Account Link */}
+          <div className="text-center mt-6 pt-6 border-t border-gray-200">
+            <p className="text-gray-600 text-xl">
+              Don't have an account?{" "}
+              <button
+                onClick={() => navigate("/register")}
+                className="text-[#145CFB] text-xl font-semibold hover:text-[#3a7ca5] transition-colors duration-200"
+              >
+                Create Account
+              </button>
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
