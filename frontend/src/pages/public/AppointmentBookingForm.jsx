@@ -1,5 +1,6 @@
-
+// src/pages/AppointmentBookingForm.jsx
 import React, { useState } from "react";
+import PatientHeader from "../../components/PatientHeader"; // ✅ Import new header
 
 const AppointmentBookingForm = () => {
   const [formData, setFormData] = useState({
@@ -37,24 +38,13 @@ const AppointmentBookingForm = () => {
 
   return (
     <div className="min-h-screen bg-blue-100 flex flex-col items-center p-6">
-      {/* Navigation Bar */}
-      <div className="w-full bg-white shadow-md flex justify-between items-center px-6 py-3 rounded-md mb-6">
-        <div className="flex space-x-8 text-gray-700 font-medium">
-          <a href="#" className="hover:text-blue-600">Dashboard</a>
-          <a href="#" className="hover:text-blue-600">Doctors</a>
-          <a href="#" className="hover:text-blue-600">Appointments</a>
-          <a href="#" className="hover:text-blue-600">Settings</a>
-        </div>
-        <div className="flex items-center space-x-4">
-          <button className="bg-blue-600 text-white px-4 py-1 rounded-md hover:bg-blue-700">
-            Logout
-          </button>
-          <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
-        </div>
-      </div>
+      {/* ✅ Use PatientHeader instead of local nav */}
+      <PatientHeader />
+      <main className="flex flex-col items-center justify-center w-full px-6 pt-[120px]"> 
+      <div className="flex flex-col items-center w-full">
 
-      {/* Appointment Form */}
-      <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-3xl">
+      {/* Add top padding to prevent content from hiding under fixed header */}
+      <div className="pt-24 bg-white shadow-lg rounded-xl p-8 w-full max-w-3xl mt-4">
         <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">
           Appointment Booking Form
         </h2>
@@ -63,7 +53,9 @@ const AppointmentBookingForm = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Row 1 */}
             <div>
-              <label className="block text-gray-700 mb-2">Select Specialization</label>
+              <label className="block text-gray-700 mb-2">
+                Select Specialization
+              </label>
               <select
                 name="specialization"
                 value={formData.specialization}
@@ -154,7 +146,9 @@ const AppointmentBookingForm = () => {
             </div>
 
             <div>
-              <label className="block text-gray-700 mb-2">Reason / Symptoms</label>
+              <label className="block text-gray-700 mb-2">
+                Reason / Symptoms
+              </label>
               <input
                 type="text"
                 name="reason"
@@ -184,6 +178,8 @@ const AppointmentBookingForm = () => {
           </div>
         </form>
       </div>
+      </div>
+      </main>
     </div>
   );
 };

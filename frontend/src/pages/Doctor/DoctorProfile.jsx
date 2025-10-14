@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import profile1 from "./assets/profile1.png";
+import profile1 from "../../assets/profile1.png";
 
 function DoctorProfile() {
   const doctor = {

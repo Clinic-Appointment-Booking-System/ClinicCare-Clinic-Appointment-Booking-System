@@ -1,5 +1,6 @@
 
 import React, { useState } from "react";
+import PatientHeader from "../../components/PatientHeader";
 
 const MyAppointments = () => {
   const [appointments, setAppointments] = useState([
@@ -30,20 +31,9 @@ const MyAppointments = () => {
   return (
     <div className="min-h-screen bg-blue-100 flex flex-col items-center p-6">
       {/* Navigation Bar */}
-      <div className="w-full bg-white shadow-md flex justify-between items-center px-6 py-3 rounded-md mb-6">
-        <div className="flex space-x-8 text-gray-700 font-medium">
-          <a href="#" className="hover:text-blue-600">Dashboard</a>
-          <a href="#" className="hover:text-blue-600">Doctors</a>
-          <a href="#" className="hover:text-blue-600">Appointments</a>
-          <a href="#" className="hover:text-blue-600">Settings</a>
-        </div>
-        <div className="flex items-center space-x-4">
-          <button className="bg-blue-600 text-white px-4 py-1 rounded-md hover:bg-blue-700">
-            Logout
-          </button>
-          <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
-        </div>
-      </div>
+      <PatientHeader />
+      <main className="flex flex-col items-center justify-center w-full px-6 pt-[120px]"> 
+      <div className="flex flex-col items-center w-full">
 
       {/* Appointments Section */}
       <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-3xl">
@@ -89,6 +79,8 @@ const MyAppointments = () => {
           </div>
         )}
       </div>
+      </div>
+      </main>
     </div>
   );
 };
