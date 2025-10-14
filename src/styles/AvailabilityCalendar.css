@@ -1,0 +1,136 @@
+.availability-calendar-card {
+  padding: clamp(16px, 2.5vw, 28px) clamp(16px, 2.5vw, 32px);
+  border-radius: clamp(16px, 3vw, 48px);
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  margin: 0;
+  color: #0f172a;
+}
+
+.availability-calendar-card h3 {
+  margin-top: 0;
+  margin-bottom: 24px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.calendar-header button {
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.calendar-header button:hover {
+  background-color: #f1f5f9;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.calendar-weekday {
+  text-align: center;
+  font-weight: 600;
+  padding: 10px 4px;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: 0.5px;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 8px;
+  font-size: 0.9em;
+  margin: 2px;
+  color: #0f172a;
+}
+
+.calendar-day:hover:not(.empty) {
+  background-color: #f0f0f0;
+}
+
+.calendar-day.empty {
+  cursor: default;
+}
+
+.calendar-day.today {
+  border: 2px solid #007bff;
+}
+
+.calendar-day.selected {
+  background-color: #007bff;
+  color: #ffffff !important;
+}
+
+/* Add after existing styles */
+@media (prefers-color-scheme: dark) {
+  .availability-calendar-card {
+    --calendar-bg: hsl(0, 0%, 100%);
+    --calendar-text: #ffffff;
+    border: 1px solid #333;
+  }
+
+  .calendar-header button {
+    border-color: #444;
+    color: #fff;
+  }
+
+  .calendar-header button:hover {
+    background-color: #333;
+  }
+
+  .calendar-weekday {
+    color: #888;
+  }
+
+  .calendar-day:hover:not(.empty) {
+    background-color: #333;
+  }
+
+  .calendar-day.today {
+    border-color: #3b82f6;
+  }
+
+  .calendar-day.selected {
+    background-color: #3b82f6;
+  }
+}
+
+/* Improve transitions */
+.calendar-day {
+  transition: all 0.2s ease;
+}
+
+.calendar-header button {
+  transition: all 0.2s ease;
+}
+
+/* Fix empty day cells */
+.calendar-day.empty {
+  background: transparent;
+  pointer-events: none;
+}

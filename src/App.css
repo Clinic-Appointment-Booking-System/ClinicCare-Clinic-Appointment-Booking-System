@@ -1,0 +1,66 @@
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #CEE3FE; /* full-page light blue */
+}
+
+.app-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.calendar-container {
+  width: 100%;
+  padding: 0;
+}
+
+/* Keep blue even in dark mode */
+@media (prefers-color-scheme: dark) {
+  body { background-color: #CEE3FE; }
+}
+
+/* Body section (below header) wrapper */
+.main-content {
+  width: min(96vw, 1200px);
+  min-height: calc(100vh - 72px); /* viewport minus header */
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2.5vw, 32px);
+  padding: clamp(12px, 2.5vw, 32px);
+  justify-content: flex-start;
+  /* transparent so the global blue shows through */
+  background-color: transparent;
+  margin: 2vh auto 4vh auto; /* center content under header */
+}
+
+/* Responsive two-column layout that collapses to one column */
+.top-row {
+  display: grid;
+  grid-template-columns: 1fr; /* mobile default */
+  gap: clamp(16px, 2.5vw, 32px);
+  align-items: start;
+}
+
+@media (min-width: 960px) {
+  .top-row {
+    grid-template-columns: 1fr 1.4fr; /* doctor+calendar | reviews */
+  }
+}
+
+.left-column,
+.right-column {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2.5vw, 32px);
+}
+
+/* Columns take full width of their grid cell */
+.left-column, .right-column { width: 100%; }
