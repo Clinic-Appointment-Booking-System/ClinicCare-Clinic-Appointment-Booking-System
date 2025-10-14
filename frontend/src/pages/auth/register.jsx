@@ -3,7 +3,12 @@ import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
 export default function Register() {
-  const [form, setForm] = useState({ name: "", email: "", password: "", role: "PATIENT" });
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    role: "PATIENT",
+  });
   const { register } = useAuth();
   const navigate = useNavigate();
 
@@ -21,58 +26,110 @@ export default function Register() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md"
-      >
-        <h2 className="text-2xl font-bold mb-6 text-center text-blue-600">
-          Register
-        </h2>
+    <div className="flex justify-center items-center mt-[70px] overflow-hidden">
+      <div className="w-full max-w-lg">
+        {/* Logo and Welcome Section */}
+        <div className="text-center mb-8">
+          <img
+            src="/clinicLogo.png"
+            alt="ClinicCare Logo"
+            className="mx-auto mb-4 h-[100px] w-auto"
+          />
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+            Create Account
+          </h1>
+          <p className="text-gray-600 text-2xl">
+            Join to{" "}
+            <span className="text-[#145CFB] font-semibold">ClinicCare</span>
+          </p>
+        </div>
 
-        <input
-          type="text"
-          name="name"
-          placeholder="Full Name"
-          className="w-full mb-4 px-4 py-2 border rounded"
-          onChange={handleChange}
-          required
-        />
+        {/* Register Form Container */}
+        <div className="bg-blue-100 shadow-xl h-auto border border-[#9EC9FE] rounded-2xl p-10">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Name Field */}
+            <div className="space-y-2">
+              <label className="block text-xl font-medium text-gray-700 mb-1 text-left">
+                Full Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                placeholder="Enter Your Full Name"
+                className="w-full px-4 py-3 border text-lg text-gray-400 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#478DBC] focus:border-transparent transition-all duration-200"
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          className="w-full mb-4 px-4 py-2 border rounded"
-          onChange={handleChange}
-          required
-        />
+            {/* Email Field */}
+            <div className="space-y-2">
+              <label className="block text-xl font-medium text-gray-700 mb-1 text-left">
+                Email Address
+              </label>
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter The Email Address"
+                className="w-full px-4 py-3 border text-lg text-gray-400 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#478DBC] focus:border-transparent transition-all duration-200"
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          className="w-full mb-4 px-4 py-2 border rounded"
-          onChange={handleChange}
-          required
-        />
+            {/* Password Field */}
+            <div className="space-y-2">
+              <label className="block text-xl font-medium text-gray-700 mb-1 text-left">
+                Password
+              </label>
+              <input
+                type="password"
+                name="password"
+                placeholder="Enter The Password"
+                className="w-full px-4 py-3 border text-lg text-gray-400 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#478DBC] focus:border-transparent transition-all duration-200"
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-        <select
-          name="role"
-          className="w-full mb-6 px-4 py-2 border rounded"
-          onChange={handleChange}
-        >
-          <option value="PATIENT">Patient</option>
-          <option value="DOCTOR">Doctor</option>
-        </select>
+            {/* Role Selection */}
+            <div className="space-y-2">
+              <label className="block text-xl font-medium text-gray-700 mb-1 text-left">
+                I am a
+              </label>
+              <select
+                name="role"
+                className="w-full px-4 py-3 border text-lg text-gray-700 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#478DBC] focus:border-transparent transition-all duration-200"
+                onChange={handleChange}
+              >
+                <option value="PATIENT">Patient</option>
+                <option value="DOCTOR">Doctor</option>
+              </select>
+            </div>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-        >
-          Register
-        </button>
-      </form>
+            {/* Register Button */}
+            <button
+              type="submit"
+              className="w-full bg-[#478DBC] text-white text-xl py-3 px-4 rounded-lg font-semibold hover:bg-[#3a7ca5] transition-colors duration-200 mt-4"
+            >
+              Create Account
+            </button>
+          </form>
+
+          {/* Login Link */}
+          <div className="text-center mt-6 pt-6 border-t border-gray-200">
+            <p className="text-gray-600 text-xl">
+              Already have an account?{" "}
+              <button
+                onClick={() => navigate("/login")}
+                className="text-[#145CFB] text-xl font-semibold hover:text-[#3a7ca5] transition-colors duration-200"
+              >
+                Sign In
+              </button>
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
