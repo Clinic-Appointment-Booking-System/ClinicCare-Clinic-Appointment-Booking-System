@@ -1,9 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
+// --------------------
+// DATABASE CONNECTION
+// --------------------
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -14,68 +11,109 @@ generator client {
 }
 
 // --------------------
-// USERS (All roles)
+// ENUMS
 // --------------------
-model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String
-  role      Role     @default(PATIENT)
-  createdAt DateTime @default(now())
-  doctor    Doctor?
-  patient   Patient?
-}
-
 enum Role {
   ADMIN
   DOCTOR
   PATIENT
 }
 
-// --------------------
-// DOCTORS
-// --------------------
-model Doctor {
-  id             Int           @id @default(autoincrement())
-  userId         Int           @unique
-  specialization String
-  bio            String?
-  availability   Json? // store availability in JSON (day, time slots)
-  user           User          @relation(fields: [userId], references: [id])
-  appointments   Appointment[]
+enum AppointmentStatus {
+  BOOKED
+  COMPLETED
+  CANCELLED
 }
 
 // --------------------
-// PATIENTS
+// USER TABLE
+// --------------------
+model User {
+  id             Int             @id @default(autoincrement())
+  name           String
+  email          String          @unique
+  passwordHash   String
+  role           Role            @default(PATIENT)
+  createdAt      DateTime        @default(now())
+
+  // Relations
+  doctor         Doctor?
+  patient        Patient?
+  notifications  Notification[]
+}
+
+// --------------------
+// SPECIALIZATION TABLE
+// --------------------
+model Specialization {
+  id     Int       @id @default(autoincrement())
+  name   String    @unique
+  doctors Doctor[]
+}
+
+// --------------------
+// DOCTOR TABLE
+// --------------------
+model Doctor {
+  id                 Int              @id @default(autoincrement())
+  userId             Int              @unique
+  specializationId   Int
+  description        String?
+  availabilityDays   Json?
+  imageUrl           String?
+  createdAt          DateTime         @default(now())
+
+  // Relations
+  user               User             @relation(fields: [userId], references: [id])
+  specialization     Specialization   @relation(fields: [specializationId], references: [id])
+  appointments       Appointment[]
+}
+
+// --------------------
+// PATIENT TABLE
 // --------------------
 model Patient {
   id           Int           @id @default(autoincrement())
   userId       Int           @unique
-  phone        String?
+  age          Int?
+  phoneNumber  String?
   address      String?
+  createdAt    DateTime      @default(now())
+
+  // Relations
   user         User          @relation(fields: [userId], references: [id])
   appointments Appointment[]
 }
 
 // --------------------
-// APPOINTMENTS
+// APPOINTMENT TABLE
 // --------------------
 model Appointment {
-  id              Int      @id @default(autoincrement())
-  doctorId        Int
-  patientId       Int
-  appointmentDate DateTime
-  reason          String?
-  status          Status   @default(PENDING)
-  createdAt       DateTime @default(now())
-  doctor          Doctor   @relation(fields: [doctorId], references: [id])
-  patient         Patient  @relation(fields: [patientId], references: [id])
+  id               Int                 @id @default(autoincrement())
+  doctorId         Int
+  patientId        Int
+  appointmentDate  DateTime
+  appointmentTime  String
+  reason           String?
+  status           AppointmentStatus   @default(BOOKED)
+
+  // Relations
+  doctor           Doctor              @relation(fields: [doctorId], references: [id])
+  patient          Patient             @relation(fields: [patientId], references: [id])
+  notifications    Notification[]
 }
 
-enum Status {
-  PENDING
-  CONFIRMED
-  CANCELLED
-  COMPLETED
+// --------------------
+// NOTIFICATION TABLE
+// --------------------
+model Notification {
+  id             Int          @id @default(autoincrement())
+  userId         Int
+  appointmentId  Int
+  message        String
+  sentAt         DateTime     @default(now())
+
+  // Relations
+  user           User         @relation(fields: [userId], references: [id])
+  appointment    Appointment  @relation(fields: [appointmentId], references: [id])
 }
