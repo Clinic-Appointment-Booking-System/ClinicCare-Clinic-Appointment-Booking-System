@@ -2,28 +2,73 @@ import { useState } from "react";
 import { ChevronLeft, ChevronRight, X, Star } from "lucide-react";
 import { Button } from "../../components/Button";
 import Header from "../../components/Header";
+import axios from "axios";
+import { useAuthGuard } from "../../hooks/useAuth";
+import { useEffect } from "react";
+
 
 export default function AdminDashboard() {
+  useAuthGuard(["ADMIN"]);
   const [selectedDate, setSelectedDate] = useState(3);
   const [selectedMonth, setSelectedMonth] = useState("October 2025");
   const [selectedTime, setSelectedTime] = useState("01:30");
+  const [doctorData, setDoctorData] = useState([]);
+  const [patientData, setPatientData] = useState([]);
+  const [searchDoctor, setSearchDoctor] = useState("");
+  const [filteredDoctor, setFilteredDoctor] = useState(null);
+  const [availabilityStatus, setAvailabilityStatus] = useState(null);
 
-  const patientData = [
-    { name: "Sujani Thilakarathna", tel: "0773547856", date: "10/10/2025" },
-    { name: "Ajantha Perera", tel: "0723552365", date: "10/10/2025" },
-    { name: "Vinod Malaka", tel: "0774327722", date: "12/10/2025" },
-    { name: "Clarence Soysa", tel: "0914478790", date: "13/10/2025" },
-    { name: "Ismi Kader", tel: "0773229087", date: "15/10/2025" },
-    { name: "Menaka de Mel", tel: "0788544060", date: "16/10/2025" },
-  ];
 
-  const doctorData = [
-    { name: "Jeewan Mendis", availability: "07/10/2025", category: "Cardiologist" },
-    { name: "Saman Jayarathne", availability: "10/10/2025", category: "Neurologist" },
-    { name: "Nihal Silva", availability: "10/10/2025", category: "Dermatologist" },
-    { name: "Jayantha Soysa", availability: "12/10/2025", category: "Psychiatrist" },
-    { name: "Yusuf Mohoor", availability: "22/10/2025", category: "Gynaecology" },
-  ];
+  useEffect(() => {
+  axios
+    .get("http://localhost:4000/api/admin/patients", { withCredentials: true })
+    .then((res) => setPatientData(res.data.patients || []))
+    .catch((err) => {
+      console.error("Error fetching patients:", err);
+      setPatientData([]); // fallback
+    });
+  }, []);
+
+
+  useEffect(() => {
+  axios
+    .get("http://localhost:4000/api/admin/doctors", { withCredentials: true })
+    .then((res) => setDoctorData(res.data.doctors))
+    .catch((err) => console.error("Error fetching doctors:", err));
+  }, []);
+
+  const handleDoctorSearch = (e) => {
+  const value = e.target.value;
+  setSearchDoctor(value);
+  const found = doctorData.find(
+    (doc) => doc.user?.name.toLowerCase() === value.toLowerCase()
+  );
+  setFilteredDoctor(found || null);
+  setAvailabilityStatus(null); // reset status when searching
+};
+
+const checkDoctorAvailability = async () => {
+  if (!filteredDoctor || !selectedDate || !selectedTime) {
+    alert("Please select doctor, date, and time.");
+    return;
+  }
+
+  try {
+    const res = await axios.get("http://localhost:4000/api/admin/check-availability", {
+      params: {
+        doctorId: filteredDoctor.id,
+        date: `${selectedMonth} ${selectedDate}`,
+        time: selectedTime,
+      },
+      withCredentials: true,
+    });
+
+    setAvailabilityStatus(res.data.available ? "Available" : "Not Available");
+  } catch (err) {
+    console.error("Error checking availability:", err);
+    setAvailabilityStatus("Error checking availability");
+  }
+};
 
   const calendarDays = Array.from({ length: 30 }, (_, i) => ({
     day: i + 1,
@@ -51,15 +96,10 @@ export default function AdminDashboard() {
                   <div></div>
                 </div>
                 {patientData.map((p, i) => (
-                  <div
-                    key={i}
-                    className={`grid grid-cols-4 px-6 py-3 ${
-                      i % 2 ? "bg-white" : "bg-blue-50"
-                    }`}
-                  >
-                    <div>{p.name}</div>
-                    <div>{p.tel}</div>
-                    <div>{p.date}</div>
+                  <div key={i} className={`grid grid-cols-4 px-6 py-3 ${i % 2 ? "bg-white" : "bg-blue-50"}`}>
+                    <div>{p.user?.name}</div>
+                    <div>{p.phoneNumber || "N/A"}</div>
+                    <div>{p.createdAt?.split("T")[0]}</div>
                     <div>
                       <Button className="bg-blue-600 text-white rounded-full px-4 py-1">
                         Manage
@@ -81,15 +121,10 @@ export default function AdminDashboard() {
                   <div></div>
                 </div>
                 {doctorData.map((d, i) => (
-                  <div
-                    key={i}
-                    className={`grid grid-cols-4 px-6 py-3 ${
-                      i % 2 ? "bg-white" : "bg-blue-50"
-                    }`}
-                  >
-                    <div>{d.name}</div>
-                    <div>{d.availability}</div>
-                    <div>{d.category}</div>
+                  <div key={i} className={`grid grid-cols-4 px-6 py-3 ${i % 2 ? "bg-white" : "bg-blue-50"}`}>
+                    <div>{d.user?.name}</div>
+                    <div>{d.user?.email}</div>
+                    <div>{d.specialization?.name}</div>
                     <div>
                       <Button className="bg-blue-600 text-white rounded-full px-4 py-1">
                         Set Time
@@ -104,6 +139,24 @@ export default function AdminDashboard() {
           {/* Right Column */}
           <div className="space-y-6">
             <h2 className="text-xl font-semibold">Availability</h2>
+
+            {/* 1️⃣ Doctor Search */}
+            <div className="bg-white rounded-lg shadow-sm p-4">
+              <input
+                type="text"
+                value={searchDoctor}
+                onChange={handleDoctorSearch}
+                placeholder="Enter Doctor Name"
+                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              {filteredDoctor && (
+                <p className="text-sm text-gray-600 mt-2">
+                  Selected: <span className="font-semibold">{filteredDoctor.user?.name}</span>
+                </p>
+              )}
+            </div>
+
+            {/* 2️⃣ Calendar */}
             <div className="bg-white rounded-lg shadow-sm p-6">
               <div className="flex items-center justify-between mb-6">
                 <button>
@@ -134,6 +187,7 @@ export default function AdminDashboard() {
               </div>
             </div>
 
+            {/* 3️⃣ Time Slots */}
             <div className="bg-white rounded-lg shadow-sm p-6 space-y-3">
               {timeSlots.map((time) => (
                 <button
@@ -150,10 +204,25 @@ export default function AdminDashboard() {
               ))}
             </div>
 
-            <Button className="w-full bg-white border border-gray-300 hover:bg-gray-50 py-3">
-              Available <Star className="inline-block ml-2" />
+            {/* 4️⃣ Availability Button */}
+            <Button
+              onClick={checkDoctorAvailability}
+              className="w-full bg-white border border-gray-300 hover:bg-gray-50 py-3 flex items-center justify-center"
+            >
+              Check Availability <Star className="inline-block ml-2 text-blue-600" />
             </Button>
+
+            {availabilityStatus && (
+              <p
+                className={`text-center font-semibold ${
+                  availabilityStatus === "Available" ? "text-green-600" : "text-red-600"
+                }`}
+              >
+                {availabilityStatus === "Available" ? "★ Doctor is Available ★" : "Doctor Not Available"}
+              </p>
+            )}
           </div>
+
         </div>
       </main>
     </div>

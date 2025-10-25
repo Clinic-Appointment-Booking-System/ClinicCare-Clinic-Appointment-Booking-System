@@ -11,14 +11,10 @@ app.use(cookieParser());
 
 // Import routes
 const authRoutes = require('./routes/auth');
-const doctorRoutes = require('./routes/doctors');
-const appointmentRoutes = require('./routes/appointments');
-const patientRoutes = require('./routes/patients');
+const adminRoutes = require('./routes/admin');
 
 app.use('/api/auth', authRoutes);
-app.use('/api/doctors', doctorRoutes);
-app.use('/api/appointments', appointmentRoutes);
-app.use('/api/patients', patientRoutes);
+app.use('/api/admin', adminRoutes);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -6,6 +6,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import DoctorList from './pages/patient/DoctorList';
 import ManageAppointment from './pages/admin/ManageAppointment';
 import ManagePatient from './pages/admin/ManagePatient';
+import DoctorList from './pages/doctor/DoctorList';
 import DoctorForm from './pages/doctor/DoctorForm';
 import DoctorProfile from './pages/doctor/DoctorProfile';
 import AppointmentBooking from './pages/public/AppointmentBookingForm';
@@ -23,6 +24,7 @@ function App() {
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/manage-appointments" element={<ManageAppointment />} />
         <Route path="/manage-patients" element={<ManagePatient />} />
+        <Route path="/doctor-list" element={<DoctorList />} />
         <Route path="/doctor-form" element={<DoctorForm />} />
         <Route path="/doctor-profile/:id" element={<DoctorProfile />} />
         <Route path="/book-appointment" element={<AppointmentBooking />} />
